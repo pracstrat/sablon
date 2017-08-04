@@ -50,7 +50,7 @@ module Sablon
       end
 
       def initialize(path)
-        super "#{Integer(rand * 1e9)}-#{File.basename(path)}", open(path){|f| f.read }
+       super "#{Integer(rand * 1e9)}-#{File.basename(path)}", IO.binread(path)
       end
 
       def append_to(paragraph, display_node, env) end
