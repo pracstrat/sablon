@@ -37,6 +37,9 @@ Creating a template is as easy as creating a normal Word document (`.docx`). Yet
 
 ![Step 6](/misc/step_6.png)
 
+- You can have image embed by entering following MERGEFIELD:
+![Image](/misc/image.png)
+
 - A complete template might look like this:
 
 ![Step 7](/misc/step_7.png)
