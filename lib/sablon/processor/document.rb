@@ -119,7 +119,7 @@ module Sablon
 
       class ImageBlock < ParagraphBlock
         def self.parent(node)
-          node.ancestors
+          node.ancestors(".//w:p").first
         end
 
         def self.encloses?(start_field, end_field)
@@ -132,11 +132,19 @@ module Sablon
             end_field.remove
             return
           end
+          # Get top of start field and end field
+          top_start_field = self.class.parent(start_field)
+          top_end_field = self.class.parent(end_field)
+          current = top_start_field
+          # Image field is located btw start and end fields :)
+          while (current != top_end_field)
+            current = current.next
+            pic_prop = current.at_xpath('.//pic:cNvPr', pic: Sablon::Processor::Relationships::PICTURE_NS_URI)
+            pic_prop.attributes['name'].value = content.first.name if pic_prop
 
-          pic_prop = self.class.parent(start_field).at_xpath('.//pic:cNvPr', pic: Sablon::Processor::Relationships::PICTURE_NS_URI)
-          pic_prop.attributes['name'].value = content.first.name
-          blip = self.class.parent(start_field).at_xpath('.//a:blip', a: Sablon::Processor::Relationships::MAIN_NS_URI)
-          blip.attributes['embed'].value = content.first.rid
+            blip = current.at_xpath('.//a:blip', a: Sablon::Processor::Relationships::MAIN_NS_URI)
+            blip.attributes['embed'].value = content.first.rid if blip
+          end
           start_field.remove
           end_field.remove
         end
